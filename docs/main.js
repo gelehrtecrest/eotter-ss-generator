@@ -130,7 +130,7 @@
 				img = new createjs.Bitmap(baseImg);
 				$('#alert').text('');
 				//URL再生成
-				write_settingurl(imageIni);
+				write_settingurl(imageIni, imageIni_1, imageIni_2, imageIni_3);
 				loadlogocanvas($('#logourl').val(), false);
 			}).fail(function(data){
 				$('#alert').text('ロゴのURLが間違っています。ヒント：httpsから始まるURLにしてください。');
@@ -484,7 +484,7 @@
 			}
 
 			//画面操作時はURLを再生成する
-			write_settingurl(imageIni);
+			write_settingurl(imageIni, imageIni_1, imageIni_2, imageIni_3);
 		});
 
 		$('input[name=logo]').click(function() {
@@ -496,11 +496,11 @@
 			}
 
 			//チェックボックス操作時はURLを再生成する
-			write_settingurl(imageIni);
+			write_settingurl(imageIni, imageIni_1, imageIni_2, imageIni_3);
 		});
 
 		//初回URL生成
-		write_settingurl(imageIni);
+		write_settingurl(imageIni, imageIni_1, imageIni_2, imageIni_3);
 	});
 
 	//画像先読み込み
@@ -514,7 +514,7 @@
 	});
 
 	// URL生成
-	function geturl(imageIni) {
+	function geturl(imageIni, imageIni_1, imageIni_2, imageIni_3) {
 		var url;
 		var baseurl = location.href.split('?')[0];
 		url = baseurl;
@@ -525,7 +525,10 @@
 		url = url + '&color_1=' + encodeURIComponent($('#color_1').val());
 		url = url + '&px_1=' + encodeURIComponent($('#px_1').val());
 		url = url + '&style_1=' + encodeURIComponent($('#style_1').val());
-		url = url + '&font=_1' + encodeURIComponent($('#font_1').val());
+		url = url + '&font_1=' + encodeURIComponent($('#font_1').val());
+		url = url + '&xpos_1=' + imageIni_1.xPos;
+		url = url + '&ypos_1=' + imageIni_1.yPos;
+		url = url + '&scale_1=' + imageIni_1.Scale;
 
 		//text
 		url = url + '&text_2=' + encodeURIComponent($('#text_2').val());
@@ -533,14 +536,20 @@
 		url = url + '&px_2=' + encodeURIComponent($('#px_2').val());
 		url = url + '&style_2=' + encodeURIComponent($('#style_2').val());
 		url = url + '&font_2=' + encodeURIComponent($('#font_2').val());
-	
+		url = url + '&xpos_2=' + imageIni_2.xPos;
+		url = url + '&ypos_2=' + imageIni_2.yPos;
+		url = url + '&scale_2=' + imageIni_2.Scale;
+
 		//text
 		url = url + '&text_3=' + encodeURIComponent($('#text_3').val());
 		url = url + '&color_3=' + encodeURIComponent($('#color_3').val());
 		url = url + '&px_3=' + encodeURIComponent($('#px_3').val());
 		url = url + '&style_3=' + encodeURIComponent($('#style_3').val());
 		url = url + '&font_3=' + encodeURIComponent($('#font_3').val());
-	
+		url = url + '&xpos_3=' + imageIni_3.xPos;
+		url = url + '&ypos_3=' + imageIni_3.yPos;
+		url = url + '&scale_3=' + imageIni_3.Scale;
+
 		//ロゴURL
 		url = url + '&logourl=' + encodeURIComponent($('#logourl').val());
 		//ロゴ位置・サイズ
@@ -563,8 +572,8 @@
 	}
 
 	// URL書き込み
-	function write_settingurl(imageIni) {
-		var url = geturl(imageIni);
+	function write_settingurl(imageIni, imageIni_1, imageIni_2, imageIni_3) {
+		var url = geturl(imageIni, imageIni_1, imageIni_2, imageIni_3);
 		$('#settingurl a').text(url);
 		$('#settingurl a').attr('href', url);
 	}
