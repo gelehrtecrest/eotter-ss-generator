@@ -266,6 +266,54 @@
 				if(t['1'] == 'local'){
 					$('input[name=logo]').val(['local']);
 				}
+			} else if(t['0'] == 'xpos_1'){
+				imageIni_1.xPos = parseFloat(t['1']);
+			} else if(t['0'] == 'ypos_1'){
+				imageIni_1.yPos = parseFloat(t['1']);
+			} else if(t['0'] == 'scale_1'){
+				imageIni_1.Scale = parseFloat(t['1']);
+			} else if(t['0'] == 'text_1'){
+				$('#text_1').val(decodeURIComponent(t['1']));
+			} else if(t['0'] == 'color_1'){
+				$('#color_1').val(decodeURIComponent(t['1']));
+			} else if(t['0'] == 'style_1'){
+				$('#style_1').val(decodeURIComponent(t['1']));
+			} else if(t['0'] == 'font_1'){
+				$('#font_1').val(decodeURIComponent(t['1']));
+			} else if(t['0'] == 'px_1'){
+				$('#px_1').val(decodeURIComponent(t['1']));
+			} else if(t['0'] == 'xpos_2'){
+				imageIni_2.xPos = parseFloat(t['1']);
+			} else if(t['0'] == 'ypos_2'){
+				imageIni_2.yPos = parseFloat(t['1']);
+			} else if(t['0'] == 'scale_2'){
+				imageIni_2.Scale = parseFloat(t['1']);
+			} else if(t['0'] == 'text_2'){
+				$('#text_2').val(decodeURIComponent(t['1']));
+			} else if(t['0'] == 'color_2'){
+				$('#color_2').val(decodeURIComponent(t['1']));
+			} else if(t['0'] == 'style_2'){
+				$('#style_2').val(decodeURIComponent(t['1']));
+			} else if(t['0'] == 'font_2'){
+				$('#font_2').val(decodeURIComponent(t['1']));
+			} else if(t['0'] == 'px_2'){
+				$('#px_2').val(decodeURIComponent(t['1']));
+			} else if(t['0'] == 'xpos_3'){
+				imageIni_3.xPos = parseFloat(t['1']);
+			} else if(t['0'] == 'ypos_3'){
+				imageIni_3.yPos = parseFloat(t['1']);
+			} else if(t['0'] == 'scale_3'){
+				imageIni_3.Scale = parseFloat(t['1']);
+			} else if(t['0'] == 'text_3'){
+				$('#text_3').val(decodeURIComponent(t['1']));
+			} else if(t['0'] == 'color_3'){
+				$('#color_3').val(decodeURIComponent(t['1']));
+			} else if(t['0'] == 'style_3'){
+				$('#style_3').val(decodeURIComponent(t['1']));
+			} else if(t['0'] == 'font_3'){
+				$('#font_3').val(decodeURIComponent(t['1']));
+			} else if(t['0'] == 'px_3'){
+				$('#px_3').val(decodeURIComponent(t['1']));
 			} else if(t['0'] == 'title'){
 				$('title').text(decodeURIComponent(t['1']));
 				$('h1').text(decodeURIComponent(t['1']));
@@ -472,8 +520,29 @@
 		url = baseurl;
 
 		//設定をgetに追加
+		//text
+		url = url + '?text_1=' + encodeURIComponent($('#text_1').val());
+		url = url + '&color_1=' + encodeURIComponent($('#color_1').val());
+		url = url + '&px_1=' + encodeURIComponent($('#px_1').val());
+		url = url + '&style_1=' + encodeURIComponent($('#style_1').val());
+		url = url + '&font=_1' + encodeURIComponent($('#font_1').val());
+
+		//text
+		url = url + '&text_2=' + encodeURIComponent($('#text_2').val());
+		url = url + '&color_2=' + encodeURIComponent($('#color_2').val());
+		url = url + '&px_2=' + encodeURIComponent($('#px_2').val());
+		url = url + '&style_2=' + encodeURIComponent($('#style_2').val());
+		url = url + '&font_2=' + encodeURIComponent($('#font_2').val());
+	
+		//text
+		url = url + '&text_3=' + encodeURIComponent($('#text_3').val());
+		url = url + '&color_3=' + encodeURIComponent($('#color_3').val());
+		url = url + '&px_3=' + encodeURIComponent($('#px_3').val());
+		url = url + '&style_3=' + encodeURIComponent($('#style_3').val());
+		url = url + '&font_3=' + encodeURIComponent($('#font_3').val());
+	
 		//ロゴURL
-		url = url + '?logourl=' + encodeURIComponent($('#logourl').val());
+		url = url + '&logourl=' + encodeURIComponent($('#logourl').val());
 		//ロゴ位置・サイズ
 		url = url + '&xpos=' + imageIni.xPos;
 		url = url + '&ypos=' + imageIni.yPos;
