@@ -1,6 +1,7 @@
 (function($){
 	//画像関連
 	var img;
+	var img_icon;
 	var img2;
 	var img_text_1;
 	var img_text_2;
@@ -8,8 +9,8 @@
 	var stage;
 
 	//画像ロード
-	function loadImage (imageData, logoImageData){
-		//画像のロード
+	function loadImage (imageData, logoImageData, iconImageData){
+		//吹き出し画像のロード
 		//ローカル
 		if($('input[name=logo]:checked').val() === 'local'){
 			if(logoImageData !== null) {
@@ -20,11 +21,29 @@
 			} else {
 				img = null;
 			}
-		} else { // URL
+		} else if($('input[name=logo]:checked').val() === 'url'){ // URL
 			var baseImg = new Image();
 			baseImg.src = $('#logourl').val()
 			img = new createjs.Bitmap(baseImg);
 		}
+
+		//吹き出し画像のロード
+		//ローカル
+		if($('input[name=icon]:checked').val() === 'local'){
+			if(iconImageData !== null) {
+				var baseImg = new Image();
+				var canvas = document.getElementById('canvas_icon');
+				baseImg.src = canvas.toDataURL();
+				img_icon = new createjs.Bitmap(baseImg);
+			} else {
+				img_icon = null;
+			}
+		} else if($('input[name=logo]:checked').val() === 'url'){ // URL
+			var baseImg = new Image();
+			baseImg.src = $('#iconurl').val()
+			img_icon = new createjs.Bitmap(baseImg);
+		}
+
 
 		//画像が選択されている時のみ合成
 		if(imageData !== null) {
@@ -41,7 +60,7 @@
 	}
 
 	//ロゴを合成する処理
-	function genImage (imageIni, imageIni_1, imageIni_2, imageIni_3){
+	function genImage (imageIni, imageIni_icon, imageIni_1, imageIni_2, imageIni_3){
 		//合成画像の設定
 		//回転
 		img.rotation = imageIni.rotation;
@@ -61,6 +80,28 @@
 
 		//透明化
 		img.alpha = imageIni.alpha;	
+
+		//アイコン合成画像の設定
+		if(img_icon != null && img_icon.getBounds() != null){
+			//回転
+			img_icon.rotation = imageIni_icon.rotation;
+			//回転の中心は、画像の中央
+			img_icon.regX = img_icon.getBounds().width / 2;
+			img_icon.regY = img_icon.getBounds().height / 2;
+
+			//上下は10ピクセルごと移動
+			// 中央点からの補正
+			//拡縮は10％ずつと過程 = いずれ定数化する必要がある
+			img_icon.x = imageIni_icon.xPos * 10 + img_icon.getBounds().width / 2 * (1 + imageIni_icon.Scale / 10);
+			img_icon.y = imageIni_icon.yPos * 10 + img_icon.getBounds().height / 2 * (1 + imageIni_icon.Scale / 10);
+
+			//拡縮は10％ずつ
+			img_icon.scaleX = img_icon.scaleX * (1 + imageIni_icon.Scale / 10);
+			img_icon.scaleY = img_icon.scaleY * (1 + imageIni_icon.Scale / 10);
+
+			//透明化
+			img_icon.alpha = imageIni_icon.alpha;	
+		}
 
 		// 文字1合成
 		var content = $('#text_1').val();
@@ -107,6 +148,9 @@
 		//ステージ生成
 		stage.addChild(img2);
 		stage.addChild(img);
+		if(img_icon != null && img_icon.getBounds() != null){
+			stage.addChild(img_icon);
+		}
 		stage.addChild(img_text_1);
 		stage.addChild(img_text_2);
 		stage.addChild(img_text_3);
@@ -120,7 +164,7 @@
 		$('#logourl').val('https://pbs.twimg.com/media/DniRZQtUwAAqUXZ.png');
 		loadlogocanvas('https://pbs.twimg.com/media/DniRZQtUwAAqUXZ.png', false);
 	
-		//ロゴURL変更時の処理
+		//吹き出しURL変更時の処理
 		$(document).on('input', '#logourl', function() {
 			$.ajax({
 				url: $('#logourl').val()
@@ -130,14 +174,14 @@
 				img = new createjs.Bitmap(baseImg);
 				$('#alert').text('');
 				//URL再生成
-				write_settingurl(imageIni, imageIni_1, imageIni_2, imageIni_3);
+				write_settingurl(imageIni, imageIni_icon, imageIni_1, imageIni_2, imageIni_3);
 				loadlogocanvas($('#logourl').val(), false);
 			}).fail(function(data){
-				$('#alert').text('ロゴのURLが間違っています。ヒント：httpsから始まるURLにしてください。');
+				$('#alert').text('吹き出し画像のURLが間違っています。ヒント：httpsから始まるURLにしてください。');
 			});
 		});
 
-		//読込画像のオブジェクト
+		//読込吹き出し画像のオブジェクト
 		var imageIni = {
 			xPos : 2,
 			yPos : 2,
@@ -146,19 +190,67 @@
 			alpha : 1.0,
 			imageData : null,
 			logoImageData : null,
+			iconImageData : null,
 			resetImage : function(){
 				this.xPos = 2;
 				this.yPos = 2;
 				this.Scale = -1;
 				this.rotation = 0;
 			},
-			makeImage : function(imageIni, imageIni_1, imageIni_2, imageIni_3){
+			makeImage : function(imageIni, imageIni_icon, imageIni_1, imageIni_2, imageIni_3){
 				if(this.imageData !== null) {
-					loadImage(this.imageData, this.logoImageData);
-					genImage(imageIni, imageIni_1, imageIni_2, imageIni_3);
+					loadImage(this.imageData, this.logoImageData, this.iconImageData);
+					genImage(imageIni, imageIni_icon, imageIni_1, imageIni_2, imageIni_3);
 				}
 			}
 		};
+
+		//アイコン設定のデフォルト値
+		$('#iconurl').val('');
+		//loadlogocanvas('', false);
+	
+		//アイコンURL変更時の処理
+		$(document).on('input', '#iconurl', function() {
+			$.ajax({
+				url: $('#iconurl').val()
+			}).done(function(data){
+				var baseImg = new Image();
+				baseImg.src = $('#iconurl').val();
+				img_icon = new createjs.Bitmap(baseImg);
+				$('#alert').text('');
+				//URL再生成
+				write_settingurl(imageIni, imageIni_icon, imageIni_1, imageIni_2, imageIni_3);
+				loadiconcanvas($('#iconurl').val(), false);
+			}).fail(function(data){
+				//$('#alert').text('アイコンのURLが間違っています。ヒント：httpsから始まるURLにしてください。');
+			});
+		});
+
+		//読込アイコン画像のオブジェクト
+		var imageIni_icon = {
+			xPos : 6,
+			yPos : 8,
+			Scale : -8,
+			rotation : 0,
+			alpha : 1.0,
+			imageData : null,
+			logoImageData : null,
+			iconImageData : null,
+			resetImage : function(){
+				this.xPos = 2;
+				this.yPos = 2;
+				this.Scale = -1;
+				this.rotation = 0;
+			},
+			makeImage : function(imageIni, imageIni_icon, imageIni_1, imageIni_2, imageIni_3){
+				if(this.imageData !== null) {
+					loadImage(this.imageData, this.logoImageData, this.iconImageData);
+					genImage(imageIni, imageIni_icon, imageIni_1, imageIni_2, imageIni_3);
+				}
+			}
+		};
+
+
 
 		//設定のデフォルト値
 		$('#text_1').val('タイトルです @光の戦士');
@@ -169,20 +261,21 @@
 
 		//読込画像のオブジェクト
 		var imageIni_1 = {
-			xPos : 8,
+			xPos : 16,
 			yPos : 8,
 			Scale : 8,
 			imageData : null,
 			logoImageData : null,
+			iconImageData : null,
 			resetImage : function(){
 				this.xPos = 8;
 				this.yPos = 8;
 				this.Scale = 8;
 			},
-			makeImage : function(imageIni, imageIni_1, imageIni_2, imageIni_3){
+			makeImage : function(imageIni, imageIni_icon, imageIni_1, imageIni_2, imageIni_3){
 				if(this.imageData !== null) {
-					loadImage(this.imageData, this.logoImageData);
-					genImage(imageIni, imageIni_1, imageIni_2, imageIni_3);
+					loadImage(this.imageData, this.logoImageData, this.iconImageData);
+					genImage(imageIni, imageIni_icon, imageIni_1, imageIni_2, imageIni_3);
 				}
 			}
 		};
@@ -201,15 +294,16 @@
 			Scale : 8,
 			imageData : null,
 			logoImageData : null,
+			iconImageData : null,
 			resetImage : function(){
 				this.xPos = 8;
 				this.yPos = 20;
 				this.Scale = 8;
 			},
-			makeImage : function(imageIni, imageIni_1, imageIni_2, imageIni_3){
+			makeImage : function(imageIni, imageIni_icon, imageIni_1, imageIni_2, imageIni_3){
 				if(this.imageData !== null) {
-					loadImage(this.imageData, this.logoImageData);
-					genImage(imageIni, imageIni_1, imageIni_2, imageIni_3);
+					loadImage(this.imageData, this.logoImageData, this.iconImageData);
+					genImage(imageIni, imageIni_icon, imageIni_1, imageIni_2, imageIni_3);
 				}
 			}
 		};
@@ -228,15 +322,16 @@
 			Scale : 8,
 			imageData : null,
 			logoImageData : null,
+			iconImageData : null,
 			resetImage : function(){
 				this.xPos = 8;
 				this.yPos = 28;
 				this.Scale = 8;
 			},
-			makeImage : function(imageIni, imageIni_1, imageIni_2, imageIni_3){
+			makeImage : function(imageIni, imageIni_icon, imageIni_1, imageIni_2, imageIni_3){
 				if(this.imageData !== null) {
-					loadImage(this.imageData, this.logoImageData);
-					genImage(imageIni, imageIni_1, imageIni_2, imageIni_3);
+					loadImage(this.imageData, this.logoImageData, this.iconImageData);
+					genImage(imageIni, imageIni_icon, imageIni_1, imageIni_2, imageIni_3);
 				}
 			}
 		};
@@ -265,6 +360,22 @@
 			} else if(t['0'] == 'logo'){
 				if(t['1'] == 'local'){
 					$('input[name=logo]').val(['local']);
+				}
+			} else if(t['0'] == 'iconurl'){
+				$('#iconurl').val(decodeURIComponent(t['1']));
+			} else if(t['0'] == 'xpos_icon'){
+				imageIni_icon.xPos = parseFloat(t['1']);
+			} else if(t['0'] == 'ypos_icon'){
+				imageIni_icon.yPos = parseFloat(t['1']);
+			} else if(t['0'] == 'scale_icon'){
+				imageIni_icon.Scale = parseFloat(t['1']);
+			} else if(t['0'] == 'rotation_icon'){
+				imageIni_icon.rotation = parseFloat(t['1']);
+			} else if(t['0'] == 'alpha_icon'){
+				imageIni_icon.alpha = parseFloat(t['1']);
+			} else if(t['0'] == 'icon'){
+				if(t['1'] == 'local'){
+					$('input[name=icon]').val(['local']);
 				}
 			} else if(t['0'] == 'xpos_1'){
 				imageIni_1.xPos = parseFloat(t['1']);
@@ -363,6 +474,33 @@
 			});
 		});
 
+		//アイコン画像読込
+		$('#icongetfile').change(function (){
+			//読み込み
+			var fileList =$('#icongetfile').prop('files');
+			var reader = new FileReader();
+			reader.readAsDataURL(fileList[0]);
+			//読み込み後
+			$(reader).on('load',function(){
+				imageIni.logoImageData = reader.result;
+				loadlogocanvas(reader.result, false);
+			});
+		});
+
+		//アイコン画像読込(白抜き)
+		$('#icongetfilealpha').change(function (){
+			//読み込み
+			var fileList =$('#icongetfilealpha').prop('files');
+			var reader = new FileReader();
+			reader.readAsDataURL(fileList[0]);
+			//読み込み後
+			$(reader).on('load',function(){
+				imageIni.logoImageData = reader.result;
+				loadlogocanvas(reader.result, true);
+			});
+		});
+
+
 		function loadlogocanvas(url, flag){
 			var image = new Image();
 			image.onload = function() {
@@ -394,6 +532,40 @@
 			};
 			image.src = url;
 		}
+
+		function loadiconcanvas(url, flag){
+			var image = new Image();
+			image.onload = function() {
+				$('#canvas_icon').attr({
+					'width': image.width,
+					'height': image.height
+				});
+				var canvas = document.getElementById('canvas_icon');
+				var context = canvas.getContext('2d');
+ 				context.drawImage(image, 0, 0);
+				var imageData = context.getImageData(0, 0, context.canvas.width, context.canvas.height);
+				var data = imageData.data;
+				for (var i = 0; i < data.length; i += 4) {
+					//各カラーチャンネルで、一番暗い値を取得
+					var minLuminance = 255;
+					if(data[i] < minLuminance)
+						minLuminance = data[i];
+					if(data[i + 1] < minLuminance)
+						minLuminance = data[i + 1];
+					if(data[i + 2] < minLuminance)
+						minLuminance = data[i + 2];
+
+					if(flag){
+						//一番暗い値を、アルファチャンネルに反映(明るいところほど透明に)
+						data[i + 3] = 255 - minLuminance;
+					}
+				}
+				context.putImageData(imageData, 0, 0);
+			};
+			image.src = url;
+		}
+
+
 
 		//ボタンイベントまとめ
 		$('.btn').on('click',function(e){
@@ -430,6 +602,38 @@
 				$('#alpha_up').prop("disabled", false);
 			}else if (e.target.id === 'reset'){
 				imageIni.resetImage();
+			}else if (e.target.id === 'up_icon'){
+				imageIni_icon.yPos -= 1;
+			}else if (e.target.id === 'down_icon'){
+				imageIni_icon.yPos += 1;
+			}else if (e.target.id === 'left_icon'){
+				imageIni_icon.xPos -= 1;
+			}else if (e.target.id === 'right_icon') {
+				imageIni_icon.xPos += 1;
+			}else if (e.target.id === 'zoomin_icon') {
+				imageIni_icon.Scale += 1;
+			}else if (e.target.id === 'zoomout_icon') {
+				imageIni_icon.Scale -= 1;
+			}else if (e.target.id === 'rotation_r_icon') {
+				imageIni_icon.rotation += 7.5;
+			}else if (e.target.id === 'rotation_l_icon') {
+				imageIni_icon.rotation -= 7.5;
+			}else if (e.target.id === 'alpha_up_icon') {
+				imageIni_icon.alpha += 0.1;
+				if(imageIni_icon.alpha >= 0.9){
+					imageIni_icon.alpha = 1.0;
+					$('#alpha_up_icon').prop("disabled", true);
+				}
+				$('#alpha_down_icon').prop("disabled", false);
+			}else if (e.target.id === 'alpha_down_icon') {
+				imageIni_icon.alpha -= 0.1;
+				if(imageIni_icon.alpha <= 0.1){
+					imageIni_icon.alpha = 0.0;
+					$('#alpha_down_icon').prop("disabled", true);
+				}
+				$('#alpha_up_icon').prop("disabled", false);
+			}else if (e.target.id === 'reset_icon'){
+				imageIni_icon.resetImage();
 			}else if (e.target.id === 'up_1'){
 				imageIni_1.yPos -= 1;
 			}else if (e.target.id === 'down_1'){
@@ -478,13 +682,13 @@
 
 			//画像操作時は再描画を行う
 			if(imageIni.imageData !== null){
-				imageIni.makeImage(imageIni, imageIni_1, imageIni_2, imageIni_3);
+				imageIni.makeImage(imageIni, imageIni_icon, imageIni_1, imageIni_2, imageIni_3);
 			}else{
 				$('#alert').text('スクリーンショットを入力してから画像生成を行ってください');
 			}
 
 			//画面操作時はURLを再生成する
-			write_settingurl(imageIni, imageIni_1, imageIni_2, imageIni_3);
+			write_settingurl(imageIni, imageIni_icon, imageIni_1, imageIni_2, imageIni_3);
 		});
 
 		$('input[name=logo]').click(function() {
@@ -496,11 +700,11 @@
 			}
 
 			//チェックボックス操作時はURLを再生成する
-			write_settingurl(imageIni, imageIni_1, imageIni_2, imageIni_3);
+			write_settingurl(imageIni, imageIni_icon, imageIni_1, imageIni_2, imageIni_3);
 		});
 
 		//初回URL生成
-		write_settingurl(imageIni, imageIni_1, imageIni_2, imageIni_3);
+		write_settingurl(imageIni, imageIni_icon, imageIni_1, imageIni_2, imageIni_3);
 	});
 
 	//画像先読み込み
@@ -514,7 +718,7 @@
 	});
 
 	// URL生成
-	function geturl(imageIni, imageIni_1, imageIni_2, imageIni_3) {
+	function geturl(imageIni, imageIni_icon, imageIni_1, imageIni_2, imageIni_3) {
 		var url;
 		var baseurl = location.href.split('?')[0];
 		url = baseurl;
@@ -564,6 +768,22 @@
 		if($('input[name=logo]:checked').val() === 'local'){
 			url = url + '&logo=local';
 		}
+
+		//アイコンURL
+		url = url + '&iconurl=' + encodeURIComponent($('#iconurl').val());
+		//アイコン位置・サイズ
+		url = url + '&xpos_icon=' + imageIni_icon.xPos;
+		url = url + '&ypos_icon=' + imageIni_icon.yPos;
+		url = url + '&scale_icon=' + imageIni_icon.Scale;
+		//アイコン回転
+		url = url + '&rotation_icon=' + imageIni_icon.rotation;
+		//アイコン透過
+		url = url + '&alpha_icon=' + imageIni_icon.alpha;
+		//アイコン読み出し場所
+		if($('input[name=icon]:checked').val() === 'local'){
+			url = url + '&icon=local';
+		}
+
 		//タイトル
 		url = url + '&title=' + encodeURIComponent($('title').text());
 		//コメント
@@ -572,8 +792,8 @@
 	}
 
 	// URL書き込み
-	function write_settingurl(imageIni, imageIni_1, imageIni_2, imageIni_3) {
-		var url = geturl(imageIni, imageIni_1, imageIni_2, imageIni_3);
+	function write_settingurl(imageIni, imageIni_icon, imageIni_1, imageIni_2, imageIni_3) {
+		var url = geturl(imageIni, imageIni_icon, imageIni_1, imageIni_2, imageIni_3);
 		$('#settingurl a').text(url);
 		$('#settingurl a').attr('href', url);
 	}
