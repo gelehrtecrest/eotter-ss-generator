@@ -12,7 +12,7 @@
 	function loadImage (imageData, logoImageData, iconImageData){
 		//吹き出し画像のロード
 		//ローカル
-		if($('input[name=logo]:checked').val() === 'local'){
+		if($('input[name=logo]:checked').val() === 'local' || $('input[name=logo]:checked').val() === 'local_white'){
 			if(logoImageData !== null) {
 				var baseImg = new Image();
 				var canvas = document.getElementById('canvas');
@@ -29,7 +29,7 @@
 
 		//吹き出し画像のロード
 		//ローカル
-		if($('input[name=icon]:checked').val() === 'local'){
+		if($('input[name=icon]:checked').val() === 'local' || $('input[name=icon]:checked').val() === 'local_white'){
 			if(iconImageData !== null) {
 				var baseImg = new Image();
 				var canvas = document.getElementById('canvas_icon');
@@ -230,7 +230,7 @@
 		var imageIni_icon = {
 			xPos : 6,
 			yPos : 8,
-			Scale : -8,
+			Scale : -7.5,
 			rotation : 0,
 			alpha : 1.0,
 			imageData : null,
@@ -360,6 +360,8 @@
 			} else if(t['0'] == 'logo'){
 				if(t['1'] == 'local'){
 					$('input[name=logo]').val(['local']);
+				} else if(t['1'] == 'local_white'){
+					$('input[name=logo]').val(['local_white']);
 				}
 			} else if(t['0'] == 'iconurl'){
 				$('#iconurl').val(decodeURIComponent(t['1']));
@@ -376,6 +378,8 @@
 			} else if(t['0'] == 'icon'){
 				if(t['1'] == 'local'){
 					$('input[name=icon]').val(['local']);
+				} else if(t['1'] == 'local_white'){
+					$('input[name=icon]').val(['local_white']);
 				}
 			} else if(t['0'] == 'xpos_1'){
 				imageIni_1.xPos = parseFloat(t['1']);
@@ -482,8 +486,8 @@
 			reader.readAsDataURL(fileList[0]);
 			//読み込み後
 			$(reader).on('load',function(){
-				imageIni.logoImageData = reader.result;
-				loadlogocanvas(reader.result, false);
+				imageIni.iconImageData = reader.result;
+				loadiconcanvas(reader.result, false);
 			});
 		});
 
@@ -495,8 +499,8 @@
 			reader.readAsDataURL(fileList[0]);
 			//読み込み後
 			$(reader).on('load',function(){
-				imageIni.logoImageData = reader.result;
-				loadlogocanvas(reader.result, true);
+				imageIni.iconImageData = reader.result;
+				loadiconcanvas(reader.result, true);
 			});
 		});
 
@@ -611,9 +615,9 @@
 			}else if (e.target.id === 'right_icon') {
 				imageIni_icon.xPos += 1;
 			}else if (e.target.id === 'zoomin_icon') {
-				imageIni_icon.Scale += 1;
+				imageIni_icon.Scale += 0.25;
 			}else if (e.target.id === 'zoomout_icon') {
-				imageIni_icon.Scale -= 1;
+				imageIni_icon.Scale -= 0.25;
 			}else if (e.target.id === 'rotation_r_icon') {
 				imageIni_icon.rotation += 7.5;
 			}else if (e.target.id === 'rotation_l_icon') {
@@ -767,6 +771,8 @@
 		//ロゴ読み出し場所
 		if($('input[name=logo]:checked').val() === 'local'){
 			url = url + '&logo=local';
+		} else if($('input[name=logo]:checked').val() === 'local_white'){
+			url = url + '&logo=local_white';
 		}
 
 		//アイコンURL
@@ -782,7 +788,10 @@
 		//アイコン読み出し場所
 		if($('input[name=icon]:checked').val() === 'local'){
 			url = url + '&icon=local';
+		} else if($('input[name=icon]:checked').val() === 'local_white'){
+			url = url + '&icon=local_white';
 		}
+
 
 		//タイトル
 		url = url + '&title=' + encodeURIComponent($('title').text());
