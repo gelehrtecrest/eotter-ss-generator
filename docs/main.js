@@ -812,6 +812,22 @@
 			imageIni_3.yPos += move;
 		}
 
+		// windows用ダウンロードボタン
+		$('#download_for_win').on('click',function(e){
+			var result = document.querySelector('#result');
+			/*
+			if (result.toBlob) {
+				result.toBlob(function (blob) {
+ 					window.navigator.msSaveBlob(blob, 'ss.png');
+				});
+			} else */ 
+			if (canvas.msToBlob) {
+				blob = result.msToBlob();
+				window.navigator.msSaveBlob(blob, 'ss.png');
+			} else {
+				alert('申し訳ありません。生成結果を右クリックしてダウンロードしてください。')
+			}
+		});
 	});
 
 	//画像先読み込み
@@ -917,4 +933,5 @@
 		$('#settingurl a').text(url);
 		$('#settingurl a').attr('href', url);
 	}
+
 })($);
