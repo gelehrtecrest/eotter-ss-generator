@@ -429,6 +429,12 @@
 				$('#font_3').val(decodeURIComponent(t['1']));
 			} else if(t['0'] == 'px_3'){
 				$('#px_3').val(decodeURIComponent(t['1']));
+			} else if(t['0'] == 'movesync'){
+				if(t['1'] == 'movesync'){
+					$('input[name=movesync]').attr('checked', true);
+				} else {
+					$('input[name=movesync]').attr('checked', false);
+				}
 			} else if(t['0'] == 'title'){
 				$('title').text(decodeURIComponent(t['1']));
 				$('h1').text(decodeURIComponent(t['1']));
@@ -775,7 +781,7 @@
 			write_settingurl(imageIni, imageIni_icon, imageIni_1, imageIni_2, imageIni_3);
 		});
 
-		$('input[name=logo]').click(function() {
+		$('input').click(function() {
 			//チェックボックス操作時は再描画を行う
 			if(imageIni.imageData !== null){
 				imageIni.makeImage(imageIni, imageIni_1);
@@ -817,6 +823,8 @@
 
 		loadImage(null, null);
 	});
+
+	
 
 	// URL生成
 	function geturl(imageIni, imageIni_icon, imageIni_1, imageIni_2, imageIni_3) {
@@ -889,6 +897,12 @@
 			url = url + '&icon=local_white';
 		}
 
+		//ロゴ読み出し場所
+		if($('input[name=movesync]:checked').val() === '1'){
+			url = url + '&movesync=movesync';
+		} else {
+			url = url + '&movesync=movenosync';
+		}
 
 		//タイトル
 		url = url + '&title=' + encodeURIComponent($('title').text());
