@@ -575,13 +575,29 @@
 		$('.btn').on('click',function(e){
 			if (e.target.id === 'update'){
 			}else if (e.target.id === 'up'){
-				imageIni.yPos -= 1;
+				if($('input[name=movesync]:checked').val() === '1'){
+					movesync_y(-1);
+				} else {
+					imageIni.yPos -= 1;
+				}
 			}else if (e.target.id === 'down'){
-				imageIni.yPos += 1;
+				if($('input[name=movesync]:checked').val() === '1'){
+					movesync_y(1);
+				} else {
+					imageIni.yPos += 1;
+				}
 			}else if (e.target.id === 'left'){
-				imageIni.xPos -= 1;
+				if($('input[name=movesync]:checked').val() === '1'){
+					movesync_x(-1);
+				} else {
+					imageIni.xPos -= 1;
+				}
 			}else if (e.target.id === 'right') {
-				imageIni.xPos += 1;
+				if($('input[name=movesync]:checked').val() === '1'){
+					movesync_x(1);
+				} else {
+					imageIni.xPos += 1;
+				}
 			}else if (e.target.id === 'zoomin') {
 				imageIni.Scale += 1;
 			}else if (e.target.id === 'zoomout') {
@@ -607,13 +623,29 @@
 			}else if (e.target.id === 'reset'){
 				imageIni.resetImage();
 			}else if (e.target.id === 'up_icon'){
-				imageIni_icon.yPos -= 1;
+				if($('input[name=movesync]:checked').val() === '1'){
+					movesync_y(-1);
+				} else {
+					imageIni_icon.yPos -= 1;
+				}
 			}else if (e.target.id === 'down_icon'){
-				imageIni_icon.yPos += 1;
+				if($('input[name=movesync]:checked').val() === '1'){
+					movesync_y(1);
+				} else {
+					imageIni_icon.yPos += 1;
+				}
 			}else if (e.target.id === 'left_icon'){
-				imageIni_icon.xPos -= 1;
+				if($('input[name=movesync]:checked').val() === '1'){
+					movesync_x(-1);
+				} else {
+					imageIni_icon.xPos -= 1;
+				}
 			}else if (e.target.id === 'right_icon') {
-				imageIni_icon.xPos += 1;
+				if($('input[name=movesync]:checked').val() === '1'){
+					movesync_x(1);
+				} else {
+					imageIni_icon.xPos += 1;
+				}
 			}else if (e.target.id === 'zoomin_icon') {
 				imageIni_icon.Scale += 0.25;
 			}else if (e.target.id === 'zoomout_icon') {
@@ -639,13 +671,29 @@
 			}else if (e.target.id === 'reset_icon'){
 				imageIni_icon.resetImage();
 			}else if (e.target.id === 'up_1'){
-				imageIni_1.yPos -= 1;
+				if($('input[name=movesync]:checked').val() === '1'){
+					movesync_y(-1);
+				} else {
+					imageIni_1.yPos -= 1;
+				}
 			}else if (e.target.id === 'down_1'){
-				imageIni_1.yPos += 1;
+				if($('input[name=movesync]:checked').val() === '1'){
+					movesync_y(1);
+				} else {
+					imageIni_1.yPos += 1;
+				}
 			}else if (e.target.id === 'left_1'){
-				imageIni_1.xPos -= 1;
+				if($('input[name=movesync]:checked').val() === '1'){
+					movesync_x(-1);
+				} else {
+					imageIni_1.xPos -= 1;
+				}
 			}else if (e.target.id === 'right_1') {
-				imageIni_1.xPos += 1;
+				if($('input[name=movesync]:checked').val() === '1'){
+					movesync_x(1);
+				} else {
+					imageIni_1.xPos += 1;
+				}
 			}else if (e.target.id === 'zoomin_1') {
 				imageIni_1.Scale += 1;
 			}else if (e.target.id === 'zoomout_1') {
@@ -653,13 +701,29 @@
 			}else if (e.target.id === 'reset_1'){
 				imageIni_1.resetImage();
 			}else if (e.target.id === 'up_2'){
-				imageIni_2.yPos -= 1;
+				if($('input[name=movesync]:checked').val() === '1'){
+					movesync_y(-1);
+				} else {
+					imageIni_2.yPos -= 1;
+				}
 			}else if (e.target.id === 'down_2'){
-				imageIni_2.yPos += 1;
+				if($('input[name=movesync]:checked').val() === '1'){
+					movesync_y(1);
+				} else {
+					imageIni_2.yPos += 1;
+				}
 			}else if (e.target.id === 'left_2'){
-				imageIni_2.xPos -= 1;
+				if($('input[name=movesync]:checked').val() === '1'){
+					movesync_x(-1);
+				} else {
+					imageIni_2.xPos -= 1;
+				}
 			}else if (e.target.id === 'right_2') {
-				imageIni_2.xPos += 1;
+				if($('input[name=movesync]:checked').val() === '1'){
+					movesync_x(1);
+				} else {
+					imageIni_2.xPos += 1;
+				}
 			}else if (e.target.id === 'zoomin_2') {
 				imageIni_2.Scale += 1;
 			}else if (e.target.id === 'zoomout_2') {
@@ -667,13 +731,29 @@
 			}else if (e.target.id === 'reset_2'){
 				imageIni_2.resetImage();
 			}else if (e.target.id === 'up_3'){
-				imageIni_3.yPos -= 1;
+				if($('input[name=movesync]:checked').val() === '1'){
+					movesync_y(-1);
+				} else {
+					imageIni_3.yPos -= 1;
+				}
 			}else if (e.target.id === 'down_3'){
-				imageIni_3.yPos += 1;
+				if($('input[name=movesync]:checked').val() === '1'){
+					movesync_y(1);
+				} else {
+					imageIni_3.yPos += 1;
+				}
 			}else if (e.target.id === 'left_3'){
-				imageIni_3.xPos -= 1;
+				if($('input[name=movesync]:checked').val() === '1'){
+					movesync_x(-1);
+				} else {
+					imageIni_3.xPos -= 1;
+				}
 			}else if (e.target.id === 'right_3') {
-				imageIni_3.xPos += 1;
+				if($('input[name=movesync]:checked').val() === '1'){
+					movesync_x(1);
+				} else {
+					imageIni_3.xPos += 1;
+				}
 			}else if (e.target.id === 'zoomin_3') {
 				imageIni_3.Scale += 1;
 			}else if (e.target.id === 'zoomout_3') {
@@ -709,6 +789,23 @@
 
 		//初回URL生成
 		write_settingurl(imageIni, imageIni_icon, imageIni_1, imageIni_2, imageIni_3);
+	
+		// 吹き出し・文字同時動かし
+		function movesync_x(move){
+			imageIni.xPos += move;
+			imageIni_icon.xPos += move;
+			imageIni_1.xPos += move;
+			imageIni_2.xPos += move;
+			imageIni_3.xPos += move;
+		}
+		function movesync_y(move){
+			imageIni.yPos += move;
+			imageIni_icon.yPos += move;
+			imageIni_1.yPos += move;
+			imageIni_2.yPos += move;
+			imageIni_3.yPos += move;
+		}
+
 	});
 
 	//画像先読み込み
